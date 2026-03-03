@@ -1,29 +1,36 @@
-import java.util.Deque;
-import java.util.LinkedList;
-
 public class PalindromeCheckerApp {
+
+    // Node class for Singly Linked List
+    static class Node {
+        char data;
+        Node next;
+
+        Node(char data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
     public static void main(String[] args) {
 
         // Hardcoded string
         String word = "madam";
 
-        // Create Deque (Double Ended Queue)
-        Deque<Character> deque = new LinkedList<>();
+        // Convert string to linked list
+        Node head = null, tail = null;
 
-        // Insert characters into deque
         for (int i = 0; i < word.length(); i++) {
-            deque.addLast(word.charAt(i));
-        }
-
-        boolean isPalindrome = true;
-
-        // Compare front and rear elements
-        while (deque.size() > 1) {
-            if (deque.removeFirst() != deque.removeLast()) {
-                isPalindrome = false;
-                break;
+            Node newNode = new Node(word.charAt(i));
+            if (head == null) {
+                head = newNode;
+                tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
             }
         }
+
+        boolean isPalindrome = checkPalindrome(head);
 
         // Print result
         if (isPalindrome) {
@@ -31,5 +38,46 @@ public class PalindromeCheckerApp {
         } else {
             System.out.println("The given string \"" + word + "\" is NOT a Palindrome.");
         }
+    }
+
+    // Method to check palindrome using Fast & Slow Pointer
+    public static boolean checkPalindrome(Node head) {
+
+        if (head == null || head.next == null)
+            return true;
+
+        Node slow = head;
+        Node fast = head;
+
+        // Find middle
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // Reverse second half
+        Node prev = null;
+        Node current = slow;
+
+        while (current != null) {
+            Node nextNode = current.next;
+            current.next = prev;
+            prev = current;
+            current = nextNode;
+        }
+
+        // Compare halves
+        Node firstHalf = head;
+        Node secondHalf = prev;
+
+        while (secondHalf != null) {
+            if (firstHalf.data != secondHalf.data) {
+                return false;
+            }
+            firstHalf = firstHalf.next;
+            secondHalf = secondHalf.next;
+        }
+
+        return true;
     }
 }
