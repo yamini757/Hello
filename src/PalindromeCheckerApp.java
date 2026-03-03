@@ -1,36 +1,12 @@
 public class PalindromeCheckerApp {
 
-    // Node class for Singly Linked List
-    static class Node {
-        char data;
-        Node next;
-
-        Node(char data) {
-            this.data = data;
-            this.next = null;
-        }
-    }
-
     public static void main(String[] args) {
 
         // Hardcoded string
         String word = "madam";
 
-        // Convert string to linked list
-        Node head = null, tail = null;
-
-        for (int i = 0; i < word.length(); i++) {
-            Node newNode = new Node(word.charAt(i));
-            if (head == null) {
-                head = newNode;
-                tail = newNode;
-            } else {
-                tail.next = newNode;
-                tail = newNode;
-            }
-        }
-
-        boolean isPalindrome = checkPalindrome(head);
+        // Call recursive function
+        boolean isPalindrome = checkPalindrome(word, 0, word.length() - 1);
 
         // Print result
         if (isPalindrome) {
@@ -40,44 +16,20 @@ public class PalindromeCheckerApp {
         }
     }
 
-    // Method to check palindrome using Fast & Slow Pointer
-    public static boolean checkPalindrome(Node head) {
+    // Recursive method
+    public static boolean checkPalindrome(String str, int start, int end) {
 
-        if (head == null || head.next == null)
+        // Base condition
+        if (start >= end) {
             return true;
-
-        Node slow = head;
-        Node fast = head;
-
-        // Find middle
-        while (fast != null && fast.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
         }
 
-        // Reverse second half
-        Node prev = null;
-        Node current = slow;
-
-        while (current != null) {
-            Node nextNode = current.next;
-            current.next = prev;
-            prev = current;
-            current = nextNode;
+        // If characters do not match
+        if (str.charAt(start) != str.charAt(end)) {
+            return false;
         }
 
-        // Compare halves
-        Node firstHalf = head;
-        Node secondHalf = prev;
-
-        while (secondHalf != null) {
-            if (firstHalf.data != secondHalf.data) {
-                return false;
-            }
-            firstHalf = firstHalf.next;
-            secondHalf = secondHalf.next;
-        }
-
-        return true;
+        // Recursive call
+        return checkPalindrome(str, start + 1, end - 1);
     }
 }
